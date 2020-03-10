@@ -8,6 +8,7 @@ app.engine('.hbs', hbs());
 app.set('view engine', '.hbs');
 
 app.use(express.static(path.join(__dirname + '/public')));
+app.use(express.urlencoded({ extended: false }));
 
 app.get('/hello/:name', (req, res) => {
   res.render('hello', { name: req.params.name });
@@ -23,6 +24,16 @@ app.get('/about', (req, res) => {
 
 app.get('/contact', (req, res) => {
   res.render('contact');
+});
+
+app.post('/contact/send-message', (req, res) => {
+  const { author, sender, title, message, image } = req.body;
+
+  if (author && sender && title && message && image) {
+    res.render('contact', { isSent: true, image });
+  } else {
+    res.render('contact', { isError: true });
+  }
 });
 
 app.get('/info', (req, res) => {
